@@ -9,6 +9,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { usePathname } from "next/navigation";
+import { Fragment } from "react";
 
 export default function NavLinks() {
   const pathname = usePathname();
@@ -25,18 +26,20 @@ export default function NavLinks() {
             <BreadcrumbLink href="/">Home</BreadcrumbLink>
           </BreadcrumbItem>
           {segments.map((segment, index) => (
-            <BreadcrumbItem key={index}>
+            <Fragment key={index}>
               <BreadcrumbSeparator />
-              {index === segments.length - 1 ? (
-                <BreadcrumbPage>
-                  <span className="capitalize">{segment}</span>
-                </BreadcrumbPage>
-              ) : (
-                <BreadcrumbLink href={getSegmentPath(index)}>
-                  <span className="capitalize">{segment}</span>
-                </BreadcrumbLink>
-              )}
-            </BreadcrumbItem>
+              <BreadcrumbItem>
+                {index === segments.length - 1 ? (
+                  <BreadcrumbPage>
+                    <span className="capitalize">{segment}</span>
+                  </BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink href={getSegmentPath(index)}>
+                    <span className="capitalize">{segment}</span>
+                  </BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+            </Fragment>
           ))}
         </BreadcrumbList>
       </Breadcrumb>

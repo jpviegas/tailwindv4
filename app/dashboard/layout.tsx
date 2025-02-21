@@ -1,4 +1,5 @@
 import HeaderComponent from "@/components/header";
+import NavLinks from "@/components/navlinks";
 import SidebarComponent from "@/components/sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
@@ -21,7 +22,10 @@ export default async function DashboardLayout({
       <div className="flex h-dvh w-dvw">
         <SidebarComponent />
         <div className="flex flex-auto flex-col">
-          <HeaderComponent />
+          <div className="sticky top-0 z-10">
+            <HeaderComponent />
+            <NavLinks />
+          </div>
           <Suspense fallback={<Loading />}>{children}</Suspense>
           <Toaster />
         </div>

@@ -1,5 +1,5 @@
-import ColorsProvider from "@/components/colors-provider";
-import { ThemeProvider } from "@/components/theme-provider";
+import ColorsProvider from "@/context/colors-provider";
+import { ThemeProvider } from "@/context/theme-provider";
 import { Metadata } from "next";
 import { Geist, Geist_Mono, Quicksand } from "next/font/google";
 import "./globals.css";

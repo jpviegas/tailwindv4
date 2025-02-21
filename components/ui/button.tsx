@@ -4,7 +4,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 // const colors = await api.getColors();
-import { ColorsContext } from "@/components/colors-provider";
+import { ColorsContext } from "@/context/colors-provider";
 import { cn } from "@/lib/utils";
 import { useContext } from "react";
 

@@ -1,4 +1,4 @@
-import { ColorsContext } from "@/components/colors-provider";
+import { ColorsContext } from "@/context/colors-provider";
 import { ButtonHTMLAttributes, useContext } from "react";
 
 export function ButtonCustom({

@@ -1,5 +1,5 @@
-import QuickPanel from "@/components/dashboard/painelrapido";
-import LastPoints from "@/components/dashboard/ultimospontos";
+import QuickPanel from "./painelrapido";
+import LastPoints from "./ultimospontos";
 
 export default async function DashboardPage() {
   return (

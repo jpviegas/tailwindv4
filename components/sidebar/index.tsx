@@ -3,6 +3,7 @@
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -21,7 +22,7 @@ import {
 } from "@/components/ui/collapsible";
 import { FaUserClock } from "react-icons/fa6";
 import { IoIosArrowForward } from "react-icons/io";
-import { LuFileText } from "react-icons/lu";
+import { LuFileText, LuLogOut } from "react-icons/lu";
 import { MdOutlineSettingsInputSvideo } from "react-icons/md";
 
 export default function SidebarComponent() {
@@ -94,6 +95,14 @@ export default function SidebarComponent() {
           ))}
         </SidebarMenu>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenuButton asChild>
+          <Link href="/" className="flex">
+            <LuLogOut className="text-destructive" />
+            <span>Sair</span>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarFooter>
     </Sidebar>
   );
 }
