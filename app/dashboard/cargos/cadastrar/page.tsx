@@ -61,7 +61,7 @@ export default function NewDepartmentForm() {
                       <FormItem>
                         <FormLabel>Nome</FormLabel>
                         <FormControl>
-                          <Input placeholder="Nome" {...field} />
+                          <Input placeholder="Nome do cargo" {...field} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -73,7 +73,10 @@ export default function NewDepartmentForm() {
                       <FormItem>
                         <FormLabel>Empresa</FormLabel>
                         <FormControl>
-                          <Input placeholder="Empresa" {...field} />
+                          <Input
+                            placeholder="Preencha o ID da empresa"
+                            {...field}
+                          />
                         </FormControl>
                       </FormItem>
                     )}
@@ -82,12 +85,15 @@ export default function NewDepartmentForm() {
                 <div className="flex gap-4">
                   <Button
                     type="submit"
-                    onClick={() =>
-                      toast("Não foi possível cadastrar o cargo", {
-                        description:
-                          "falta preencher algum campo ou preencheu errado",
-                      })
+                    disabled={
+                      form.formState.isSubmitting || !form.formState.isValid
                     }
+                    // onClick={() =>
+                    //   toast("Não foi possível cadastrar o cargo", {
+                    //     description:
+                    //       "falta preencher algum campo ou preencheu errado",
+                    //   })
+                    // }
                   >
                     Salvar
                   </Button>

@@ -1,6 +1,7 @@
 "use client";
 
-// import { api } from "@/api/fake";
+import { api } from "@/api/fake";
+// import { GET } from "@/api/route";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -18,20 +19,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-// import { toast } from "@/hooks/use-toast";
 import { loginSchema } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, LoaderCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import * as z from "zod";
 
 export function LoginForm() {
   const router = useRouter();
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -44,30 +43,24 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     setError("");
-    console.log(values);
-
     try {
-      // const getAccount = await api.getAccount();
-      // console.log("get accounts:", getAccount);
-      // if (getAccount.password === values.password) {
-      //   router.push("/dashboard");
-      // }
-      // const response = await fetch("/api", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(values),
-      // });
+      const accounts = await api.getAccount();
+      // const getacc = await GET();
 
-      // if (!response.ok) {
-      //   const data = await response.json();
-      //   throw new Error(data.error || "Erro ao fazer login");
-      // }
-      toast("Login com sucesso");
+      const user = accounts.find((account) => account.email === values.email);
 
-      router.push("/dashboard");
-      router.refresh();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Ocorreu um erro");
+      if (!user) {
+        setError("Email ou senha incorretos");
+        return;
+      }
+
+      if (user.password === values.password) {
+        router.push("/dashboard");
+      } else {
+        setError("Email ou senha incorretos");
+      }
+    } catch {
+      setError("Ocorreu um erro ao tentar fazer login");
     }
   }
 
@@ -90,6 +83,7 @@ export function LoginForm() {
                     <Input
                       placeholder="Digite seu email"
                       type="email"
+                      required
                       disabled={form.formState.isSubmitting}
                       {...field}
                     />
@@ -110,6 +104,7 @@ export function LoginForm() {
                       <Input
                         placeholder="Digite sua senha"
                         type={showPassword ? "text" : "password"}
+                        required
                         disabled={form.formState.isSubmitting}
                         {...field}
                       />
@@ -119,9 +114,9 @@ export function LoginForm() {
                         className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                       >
                         {showPassword ? (
-                          <EyeOff className="size-4" />
+                          <EyeOff className="size-4 hover:cursor-pointer" />
                         ) : (
-                          <Eye className="size-4" />
+                          <Eye className="size-4 hover:cursor-pointer" />
                         )}
                       </button>
                     </div>
@@ -131,9 +126,7 @@ export function LoginForm() {
               )}
             />
 
-            {error && (
-              <p className="text-center text-sm text-red-500">{error}</p>
-            )}
+            <p className="text-destructive text-center text-sm">{error}</p>
 
             <Link href="#" className={buttonVariants({ variant: "link" })}>
               Esqueceu sua senha?
@@ -142,15 +135,16 @@ export function LoginForm() {
             <Button
               type="submit"
               className="w-full"
-              disabled={form.formState.isSubmitting}
-              onClick={() =>
-                toast("Não foi possível cadastrar a empresa", {
-                  description:
-                    "falta preencher algum campo ou preencheu errado",
-                })
-              }
+              disabled={form.formState.isSubmitting || !form.formState.isValid}
             >
-              {form.formState.isSubmitting ? "Entrando..." : "Entrar"}
+              {form.formState.isSubmitting ? (
+                <>
+                  Entrando...
+                  <LoaderCircleIcon className="animate-spin" />
+                </>
+              ) : (
+                "Entrar"
+              )}
             </Button>
           </form>
         </Form>

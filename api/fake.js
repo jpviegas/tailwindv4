@@ -1,10 +1,18 @@
 export const companyData = {
-  accounts: {
-    id: 1,
-    email: "admin",
-    password: "admin",
-    role: "admin",
-  },
+  accounts: [
+    {
+      id: 1,
+      email: "admin@admin.com",
+      password: "admin",
+      role: "admin",
+    },
+    {
+      id: 2,
+      email: "jp@jp.com",
+      password: "jp",
+      role: "jp",
+    },
+  ],
 
   companies: [
     {
