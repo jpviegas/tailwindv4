@@ -49,9 +49,7 @@ export function LoginForm() {
       const getacc = await GET();
 
       const user = getacc.find((account) => account.email === values.email);
-      console.log("FE", values.password);
 
-      console.log("mock", user?.password);
       if (!user) {
         setError("Email ou senha incorretos");
         return;
