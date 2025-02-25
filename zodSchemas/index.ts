@@ -29,12 +29,14 @@ export const ufsBrasil = [
   "SE",
   "TO",
 ];
-// se quiser converter algum campo para number, usar z.coerce.number()
+
+export type LoginType = z.infer<typeof loginSchema>;
 export const loginSchema = z.object({
-  email: z.string().email("Email inválido"),
+  email: z.string().min(1, "Email é obrigatório").email("Email inválido"),
   password: z.string().min(1, "Senha é obrigatória"),
 });
 
+export type CompanyType = z.infer<typeof registerCompanySchema>;
 export const registerCompanySchema = z.object({
   companyName: z.string().min(10, "O nome é obrigarório"),
   nickname: z.string().min(1, "O nome fantasia é obrigatório"),
@@ -57,6 +59,7 @@ export const registerCompanySchema = z.object({
   companyEmail: z.string().email("O email da empresa é obrigatório"),
 });
 
+export type EmployeeType = z.infer<typeof registerEmployeeSchema>;
 export const registerEmployeeSchema = z.object({
   name: z.string().min(10, "O nome é obrigarório"),
   pis: z.string().min(1, "O PIS é obrigatório"),
@@ -81,6 +84,7 @@ export const registerEmployeeSchema = z.object({
   socialName: z.string().optional(),
 });
 
+export type DepartmentType = z.infer<typeof registerDepartmentSchema>;
 export const registerDepartmentSchema = z.object({
   name: z.string().min(1, "O nome é obrigarório"),
   company: z.string().min(1, "A empresa é obrigarória"),
@@ -88,11 +92,13 @@ export const registerDepartmentSchema = z.object({
   sheetNumber: z.string().min(1, "O número da folha é obrigarório"),
 });
 
+export type RoleType = z.infer<typeof registerRoleSchema>;
 export const registerRoleSchema = z.object({
   name: z.string().min(1, "O nome é obrigarório"),
   company: z.string().min(1, "A empresa é obrigarória"),
 });
 
+export type WorkingHourType = z.infer<typeof registerWorkingHourSchema>;
 export const registerWorkingHourSchema = z.object({
   name: z.string().min(1, "O nome é obrigarório"),
   type: z.string().min(1, "O tipo do horário é obrigatório"),

@@ -1,7 +1,7 @@
 "use client";
 
-import { api } from "@/api/fake";
-// import { GET } from "@/api/route";
+// import { api } from "@/api/fake";
+import { GET } from "@/api/route";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -19,13 +19,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { loginSchema } from "@/types";
+import { loginSchema } from "@/zodSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, LoaderCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 
 export function LoginForm() {
@@ -44,19 +45,23 @@ export function LoginForm() {
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     setError("");
     try {
-      const accounts = await api.getAccount();
-      // const getacc = await GET();
+      // const accounts = await api.getAccount();
+      const getacc = await GET();
 
-      const user = accounts.find((account) => account.email === values.email);
+      const user = getacc.find((account) => account.email === values.email);
+      console.log("FE", values.password);
 
+      console.log("mock", user?.password);
       if (!user) {
         setError("Email ou senha incorretos");
         return;
       }
 
       if (user.password === values.password) {
+        toast("Login realizado com sucesso.");
         router.push("/dashboard");
       } else {
+        toast("Login realizado com sucesso.");
         setError("Email ou senha incorretos");
       }
     } catch {
@@ -135,7 +140,7 @@ export function LoginForm() {
             <Button
               type="submit"
               className="w-full"
-              disabled={form.formState.isSubmitting || !form.formState.isValid}
+              disabled={form.formState.isSubmitting}
             >
               {form.formState.isSubmitting ? (
                 <>

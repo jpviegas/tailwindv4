@@ -1,5 +1,4 @@
 import { api } from "@/api/fake";
-import { EmployeeFilterForm } from "@/components/dashboard/funcionarios/filterForm";
 import { Button } from "@/components/ui/button";
 import {
   Pagination,
@@ -20,6 +19,7 @@ import {
 } from "@/components/ui/table";
 import { ChevronDown, MoreHorizontal, Pencil, Trash } from "lucide-react";
 import Link from "next/link";
+import { EmployeeFilterForm } from "./filterForm";
 
 export default async function EmployeesPage() {
   const data = await api.getEmployees();

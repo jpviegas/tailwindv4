@@ -19,7 +19,7 @@ export default function NavLinks() {
   };
 
   return (
-    <nav className="bg-background border-foreground/10 border-b px-8 py-1">
+    <nav className="px-8 py-1">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>

@@ -1,5 +1,6 @@
 "use client";
 
+import { POST } from "@/api/dashboard/cargos/route";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -10,7 +11,7 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { registerRoleSchema } from "@/types";
+import { registerRoleSchema } from "@/zodSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -28,13 +29,11 @@ export default function NewDepartmentForm() {
     },
   });
 
-  function onSubmit(values: FormValues) {
-    console.log(values);
-
-    // Example error handling
+  async function onSubmit(values: FormValues) {
     try {
-      // API call or other logic
-      toast("O cargo foi cadastrado com sucesso.");
+      const { name } = await POST(values);
+
+      toast(`O cargo ${name} foi cadastrado com sucesso.`);
     } catch {
       toast("Não foi possível cadastrar o cargo.");
     }
@@ -85,9 +84,7 @@ export default function NewDepartmentForm() {
                 <div className="flex gap-4">
                   <Button
                     type="submit"
-                    disabled={
-                      form.formState.isSubmitting || !form.formState.isValid
-                    }
+                    disabled={form.formState.isSubmitting}
                     // onClick={() =>
                     //   toast("Não foi possível cadastrar o cargo", {
                     //     description:

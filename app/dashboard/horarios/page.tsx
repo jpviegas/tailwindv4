@@ -1,5 +1,5 @@
 import { api } from "@/api/fake";
-import { EmployeeFilterForm } from "@/components/dashboard/funcionarios/filterForm";
+import { EmployeeFilterForm } from "@/app/dashboard/funcionarios/filterForm";
 import { Button } from "@/components/ui/button";
 import {
   Pagination,

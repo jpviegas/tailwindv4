@@ -1,17 +1,17 @@
-import { loginSchema } from "@/types";
+import { LoginType } from "@/zodSchemas";
 
-export async function GET() {
-  const res = await fetch("/api", {
-    headers: { "Content-Type": "application/json" },
+export async function GET(): Promise<LoginType[]> {
+  const res = await fetch(`${process.env.api}/admin`, {
+    method: "GET",
+    headers: { "content-type": "application/json" },
   });
 
   const data = await res.json();
-
-  return Response.json({ data });
+  return data;
 }
 
-export async function PostLogin(values: typeof loginSchema) {
-  const response = await fetch("/api", {
+export async function PostLogin(values: LoginType) {
+  const response = await fetch(`${process.env.api}/admin`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(values),

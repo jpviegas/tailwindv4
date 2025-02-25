@@ -30,9 +30,9 @@ export const companyData = {
   ],
 
   jobRoles: [
-    { id: 1, role: "Cargo 1" },
-    { id: 2, role: "Cargo 2" },
-    { id: 3, role: "Cargo 3" },
+    { id: 1, name: "Cargo 1" },
+    { id: 2, name: "Cargo 2" },
+    { id: 3, name: "Cargo 3" },
   ],
 
   departments: [

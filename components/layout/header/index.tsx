@@ -8,7 +8,7 @@ import Link from "next/link";
 export default async function HeaderComponent() {
   const data = await api.getCompanyInfo();
   return (
-    <header className="flex h-16 items-center justify-between px-8 shadow-lg">
+    <header className="flex h-16 items-center justify-between px-8">
       <Link href={"/dashboard"} className="size-12">
         <Image src={logo} alt="icon logo" />
       </Link>

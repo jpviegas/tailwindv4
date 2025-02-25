@@ -1,5 +1,6 @@
+// import { GET } from "@/api/dashboard/cargos/route";
 import { api } from "@/api/fake";
-import { EmployeeFilterForm } from "@/components/dashboard/funcionarios/filterForm";
+import { EmployeeFilterForm } from "@/app/dashboard/funcionarios/filterForm";
 import { Button } from "@/components/ui/button";
 import {
   Pagination,
@@ -23,6 +24,8 @@ import Link from "next/link";
 
 export default async function JobRolesPage() {
   const data = await api.getJobRoles();
+  // const data = await GET();
+
   return (
     <main className="container mx-auto flex h-full flex-col justify-evenly gap-8">
       <div className="flex items-center justify-between border-b pb-8">
@@ -53,7 +56,7 @@ export default async function JobRolesPage() {
           <TableBody>
             {data.map((job) => (
               <TableRow key={job.id}>
-                <TableCell className="w-1/2">{job.role}</TableCell>
+                <TableCell className="w-1/2">{job.name}</TableCell>
                 <TableCell className="flex w-full items-center justify-between">
                   10
                   <div className="flex justify-end gap-2">

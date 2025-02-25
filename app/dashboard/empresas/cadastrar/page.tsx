@@ -20,7 +20,7 @@ import {
 import { Toaster } from "@/components/ui/sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { registerCompanySchema, ufsBrasil } from "@/types";
+import { registerCompanySchema, ufsBrasil } from "@/zodSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Upload, User } from "lucide-react";
 import Link from "next/link";

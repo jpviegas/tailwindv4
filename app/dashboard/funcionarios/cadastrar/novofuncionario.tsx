@@ -35,7 +35,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 // import PersonalDataForm from "./funcionarios/personalForm";
-import { registerEmployeeSchema } from "@/types";
+import { registerEmployeeSchema } from "@/zodSchemas";
 import { CalendarIcon, MapPin, Phone, Search, User } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";

@@ -1,4 +1,4 @@
-import NewEmployeeForm from "@/components/dashboard/novofuncionario";
+import NewEmployeeForm from "./novofuncionario";
 
 export default function NewEmployee() {
   return <NewEmployeeForm />;

@@ -1,6 +1,6 @@
-import HeaderComponent from "@/components/header";
-import NavLinks from "@/components/navlinks";
-import SidebarComponent from "@/components/sidebar";
+import HeaderComponent from "@/components/layout/header";
+import NavLinks from "@/components/layout/navlinks";
+import SidebarComponent from "@/components/layout/sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { Metadata } from "next";
@@ -22,7 +22,7 @@ export default async function DashboardLayout({
       <div className="flex h-dvh w-dvw">
         <SidebarComponent />
         <div className="flex flex-auto flex-col">
-          <div className="sticky top-0 z-10">
+          <div className="border-foreground/10 bg-background sticky top-0 z-10 border-b">
             <HeaderComponent />
             <NavLinks />
           </div>
