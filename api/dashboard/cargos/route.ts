@@ -1,21 +1,40 @@
 import { RoleType } from "@/zodSchemas";
 
-type RoleTypeWithId = RoleType & { id: string };
+type RoleTypeWithId = RoleType & { _id: string };
 
-export async function GET(): Promise<RoleTypeWithId[]> {
-  const res = await fetch(`${process.env.api}/role`, {
+export async function GetAllRoles(): Promise<{
+  count: number;
+  roles: RoleTypeWithId[];
+}> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roles/`, {
     method: "GET",
-    headers: { "Content-Type": "application/json" },
+    headers: { "content-type": "application/json" },
   });
 
   const data = await res.json();
   return data;
 }
 
-export async function POST(values: RoleType): Promise<RoleTypeWithId> {
-  console.log("BE", values);
+export async function GetCompanyRoles(company: string): Promise<{
+  count: number;
+  roles: RoleTypeWithId[];
+}> {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/roles/${company}`,
+    {
+      method: "GET",
+      headers: { "content-type": "application/json" },
+    },
+  );
 
-  const res = await fetch(`${process.env.api}/role`, {
+  const data = await res.json();
+  return data;
+}
+
+export async function CreateRole(
+  values: RoleType,
+): Promise<{ message: string }> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roles`, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(values),
@@ -23,9 +42,9 @@ export async function POST(values: RoleType): Promise<RoleTypeWithId> {
 
   if (!res.ok) {
     const data = await res.json();
-    throw new Error(data.error || "Erro ao fazer login");
+    throw new Error(data.error || "Erro ao cadastrar o cargo");
   }
 
   const data = await res.json();
-  return data;
+  return data.message;
 }

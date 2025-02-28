@@ -94,7 +94,7 @@ export const registerDepartmentSchema = z.object({
 
 export type RoleType = z.infer<typeof registerRoleSchema>;
 export const registerRoleSchema = z.object({
-  name: z.string().min(1, "O nome é obrigarório"),
+  role: z.string().min(1, "O nome é obrigarório"),
   company: z.string().min(1, "A empresa é obrigarória"),
 });
 

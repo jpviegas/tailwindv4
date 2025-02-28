@@ -27,7 +27,7 @@ export default async function DashboardLayout({
             <NavLinks />
           </div>
           <Suspense fallback={<Loading />}>{children}</Suspense>
-          <Toaster />
+          <Toaster richColors />
         </div>
       </div>
     </SidebarProvider>

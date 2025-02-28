@@ -1,5 +1,4 @@
-// import { GET } from "@/api/dashboard/cargos/route";
-import { api } from "@/api/fake";
+import { GetAllRoles } from "@/api/dashboard/cargos/route";
 import { EmployeeFilterForm } from "@/app/dashboard/funcionarios/filterForm";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,8 +22,7 @@ import { MoreHorizontal, Pencil, Trash } from "lucide-react";
 import Link from "next/link";
 
 export default async function JobRolesPage() {
-  const data = await api.getJobRoles();
-  // const data = await GET();
+  const { count, roles } = await GetAllRoles();
 
   return (
     <main className="container mx-auto flex h-full flex-col justify-evenly gap-8">
@@ -33,8 +31,7 @@ export default async function JobRolesPage() {
         <div className="flex gap-2">
           <Button asChild className="gap-2">
             <Link href={"cargos/cadastrar"}>
-              <span>+</span>
-              Adicionar
+              <span>+ Adicionar</span>
             </Link>
           </Button>
           <Button variant="ghost" size="icon">
@@ -54,14 +51,14 @@ export default async function JobRolesPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.map((job) => (
-              <TableRow key={job.id}>
-                <TableCell className="w-1/2">{job.name}</TableCell>
+            {roles.map((job) => (
+              <TableRow key={job._id}>
+                <TableCell className="w-1/2">{job.role}</TableCell>
                 <TableCell className="flex w-full items-center justify-between">
                   10
                   <div className="flex justify-end gap-2">
                     <Button variant="ghost" size="icon" className="size-8">
-                      <Link href={`funcionarios/${job.id}`}>
+                      <Link href={`funcionarios/${job._id}`}>
                         <Pencil className="size-4" />
                       </Link>
                     </Button>
@@ -77,7 +74,7 @@ export default async function JobRolesPage() {
       </div>
 
       <div className="flex items-center justify-between py-4">
-        <div className="text-muted-foreground text-sm">1 a 10 de 88</div>
+        <div className="text-muted-foreground text-sm">1 a 10 de {count}</div>
         <Pagination>
           <PaginationContent>
             <PaginationItem>

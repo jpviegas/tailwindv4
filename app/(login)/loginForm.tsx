@@ -1,7 +1,6 @@
 "use client";
 
-// import { api } from "@/api/fake";
-import { GET } from "@/api/route";
+import { login } from "@/api/route";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -19,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useUser } from "@/context/UserContext";
 import { loginSchema } from "@/zodSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, LoaderCircleIcon } from "lucide-react";
@@ -26,13 +26,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import * as z from "zod";
 
 export function LoginForm() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const { user, fetchUser } = useUser();
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -45,25 +45,17 @@ export function LoginForm() {
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     setError("");
     try {
-      // const accounts = await api.getAccount();
-      const getacc = await GET();
+      const res = await login(values);
 
-      const user = getacc.find((account) => account.email === values.email);
-
-      if (!user) {
-        setError("Email ou senha incorretos");
-        return;
-      }
-
-      if (user.password === values.password) {
-        toast("Login realizado com sucesso.");
-        router.push("/dashboard");
+      if (res !== 200) {
+        fetchUser(`${values.email}`);
+        console.log("use user:", user);
+        setError(res);
       } else {
-        toast("Login realizado com sucesso.");
-        setError("Email ou senha incorretos");
+        router.push("/dashboard");
       }
     } catch {
-      setError("Ocorreu um erro ao tentar fazer login");
+      setError("Email ou senha incorreto");
     }
   }
 

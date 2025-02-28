@@ -1,5 +1,6 @@
 import ColorsProvider from "@/context/colors-provider";
 import { ThemeProvider } from "@/context/theme-provider";
+import { UserProvider } from "@/context/UserContext";
 import { Metadata } from "next";
 import { Geist, Geist_Mono, Quicksand } from "next/font/google";
 import "./globals.css";
@@ -41,7 +42,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ColorsProvider>{children}</ColorsProvider>
+          <ColorsProvider>
+            <UserProvider>{children}</UserProvider>
+          </ColorsProvider>
         </ThemeProvider>
       </body>
     </html>
