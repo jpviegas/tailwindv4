@@ -1,4 +1,4 @@
-import { api } from "@/api/fake";
+import { GetAllDepartments } from "@/api/dashboard/departamentos/route";
 import { EmployeeFilterForm } from "@/app/dashboard/funcionarios/filterForm";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,7 +28,8 @@ export const metadata: Metadata = {
 };
 
 export default async function DepartmentPage() {
-  const data = await api.getDepartments();
+  const { count, departments } = await GetAllDepartments();
+
   return (
     <main className="container mx-auto flex h-full flex-col justify-evenly gap-8">
       <div className="flex items-center justify-between border-b pb-8">
@@ -59,14 +60,14 @@ export default async function DepartmentPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.map((department) => (
-              <TableRow key={department.id}>
+            {departments.map((department) => (
+              <TableRow key={department._id}>
                 <TableCell className="w-1/2">{department.department}</TableCell>
                 <TableCell className="flex items-center justify-between">
                   8
                   <div className="flex justify-end gap-2">
                     <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <Link href={`departamentos/${department.id}`}>
+                      <Link href={`departamentos/${department._id}`}>
                         <Pencil className="size-4" />
                       </Link>
                     </Button>
@@ -82,7 +83,7 @@ export default async function DepartmentPage() {
       </div>
 
       <div className="flex items-center justify-between py-4">
-        <div className="text-muted-foreground text-sm">1 a 10 de 88</div>
+        <div className="text-muted-foreground text-sm">1 a 10 de {count}</div>
         <Pagination>
           <PaginationContent>
             <PaginationItem>
