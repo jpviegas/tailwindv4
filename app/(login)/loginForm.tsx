@@ -26,13 +26,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 
 export function LoginForm() {
   const router = useRouter();
-  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { user, fetchUser } = useUser();
+  const { fetchUser } = useUser();
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -43,19 +43,17 @@ export function LoginForm() {
   });
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
-    setError("");
     try {
       const res = await login(values);
-
-      if (res !== 200) {
-        fetchUser(`${values.email}`);
-        console.log("use user:", user);
-        setError(res);
+      if (!res.success) {
+        toast.error(res);
       } else {
+        fetchUser(`${values.email}`);
+        toast.success(res.message);
         router.push("/dashboard");
       }
     } catch {
-      setError("Email ou senha incorreto");
+      toast.error("Ocorreu um erro.");
     }
   }
 
@@ -120,8 +118,6 @@ export function LoginForm() {
                 </FormItem>
               )}
             />
-
-            <p className="text-destructive text-center text-sm">{error}</p>
 
             <Link href="#" className={buttonVariants({ variant: "link" })}>
               Esqueceu sua senha?

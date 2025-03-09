@@ -2,14 +2,13 @@ import HeaderComponent from "@/components/layout/header";
 import NavLinks from "@/components/layout/navlinks";
 import SidebarComponent from "@/components/layout/sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { Toaster } from "@/components/ui/sonner";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import Loading from "../loading";
 
 export const metadata: Metadata = {
   title: "Dashboard - Amplo Serviços",
-  description: "Deashboard amplo serviços",
+  description: "Página dashboard da amplo serviços",
 };
 
 export default async function DashboardLayout({
@@ -27,7 +26,6 @@ export default async function DashboardLayout({
             <NavLinks />
           </div>
           <Suspense fallback={<Loading />}>{children}</Suspense>
-          <Toaster richColors />
         </div>
       </div>
     </SidebarProvider>

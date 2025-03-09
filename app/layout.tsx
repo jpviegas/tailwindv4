@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/sonner";
 import ColorsProvider from "@/context/colors-provider";
 import { ThemeProvider } from "@/context/theme-provider";
 import { UserProvider } from "@/context/UserContext";
@@ -23,7 +24,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Amplo Serviços",
-  description: "Home page amplo serviços",
+  description: "Página inicial da amplo serviços",
 };
 
 export default function RootLayout({
@@ -43,7 +44,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ColorsProvider>
-            <UserProvider>{children}</UserProvider>
+            <UserProvider>
+              {children}
+              <Toaster richColors />
+            </UserProvider>
           </ColorsProvider>
         </ThemeProvider>
       </body>

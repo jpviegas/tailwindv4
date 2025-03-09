@@ -1,4 +1,4 @@
-import { api } from "@/api/fake";
+import { GetAllEmployees } from "@/api/dashboard/funcionarios/route";
 import { Button } from "@/components/ui/button";
 import {
   Pagination,
@@ -18,11 +18,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ChevronDown, MoreHorizontal, Pencil, Trash } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
 import { EmployeeFilterForm } from "./filterForm";
 
+export const metadata: Metadata = {
+  title: "Funcionários - Amplo Serviços",
+  description: "Página de funcionários da amplo serviços",
+};
+
 export default async function EmployeesPage() {
-  const data = await api.getEmployees();
+  const { count, employees } = await GetAllEmployees();
+
   return (
     <main className="container mx-auto flex h-full flex-col justify-evenly gap-8">
       <div className="flex items-center justify-between border-b pb-8">
@@ -57,8 +64,8 @@ export default async function EmployeesPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.map((employee) => (
-              <TableRow key={employee.id}>
+            {employees.map((employee) => (
+              <TableRow key={employee._id}>
                 <TableCell>{employee.name}</TableCell>
                 <TableCell>{employee.company}</TableCell>
                 <TableCell>{employee.department}</TableCell>
@@ -66,7 +73,7 @@ export default async function EmployeesPage() {
                   {employee.status}
                   <div className="flex justify-end gap-2">
                     <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <Link href={`funcionarios/${employee.id}`}>
+                      <Link href={`funcionarios/${employee._id}`}>
                         <Pencil className="h-4 w-4" />
                       </Link>
                     </Button>
@@ -82,7 +89,7 @@ export default async function EmployeesPage() {
       </div>
 
       <div className="flex items-center justify-between py-4">
-        <div className="text-muted-foreground text-sm">1 a 10 de 88</div>
+        <div className="text-muted-foreground text-sm">1 a 10 de {count}</div>
         <Pagination>
           <PaginationContent>
             <PaginationItem>

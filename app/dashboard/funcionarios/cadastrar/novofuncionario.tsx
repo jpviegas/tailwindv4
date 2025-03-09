@@ -1,5 +1,6 @@
 "use client";
 
+// import { CreateEmployee } from "@/api/dashboard/funcionarios/route";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,19 +29,27 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { registerEmployeeSchema, RoleType, ufsBrasil } from "@/zodSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { Plus, Upload } from "lucide-react";
+import {
+  CalendarIcon,
+  MapPin,
+  Phone,
+  Plus,
+  Search,
+  Upload,
+  User,
+} from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-// import PersonalDataForm from "./funcionarios/personalForm";
-import { registerEmployeeSchema } from "@/zodSchemas";
-import { CalendarIcon, MapPin, Phone, Search, User } from "lucide-react";
-import Link from "next/link";
 import { toast } from "sonner";
+import { z } from "zod";
 
-export default function NewEmployeeForm() {
+export default function NewEmployeeForm({ roles }: { roles: RoleType[] }) {
+  console.log("roles", roles);
+
   const [activeTab, setActiveTab] = useState("general");
   type FormValues = z.infer<typeof registerEmployeeSchema>;
 
@@ -64,15 +73,35 @@ export default function NewEmployeeForm() {
       rg: "",
       birthDate: new Date(),
       socialName: "",
+      cnh: "",
+      cnhCategory: "",
+      cnhExpiration: new Date(),
+      cep: "",
+      address: "",
+      neighborhood: "",
+      city: "",
+      state: "",
+      phone: "",
+      extension: "",
+      fatherName: "",
+      motherName: "",
+      gender: "",
+      nationality: "",
+      placeOfBirth: "",
+      civilStatus: "",
     },
   });
 
-  function onSubmit(values: FormValues) {
-    console.log(values);
-
+  async function onSubmit(values: FormValues) {
     try {
-      // API call or other logic
-      toast("O funcionário foi cadastrado com sucesso.");
+      console.log(values);
+      // const message = await CreateEmployee(values);
+
+      // if (!message) {
+      //   toast("Não foi possível cadastrar o funcionário.");
+      // } else {
+      //   toast.success("O funcionário foi cadastrado com sucesso");
+      // }
     } catch {
       toast("Não foi possível cadastrar o funcionário.");
     }
@@ -239,7 +268,6 @@ export default function NewEmployeeForm() {
                             </div>
                           </RadioGroup>
                         </FormControl>
-                        <div></div>
                       </FormItem>
                     )}
                   />
@@ -371,18 +399,13 @@ export default function NewEmployeeForm() {
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                <SelectItem value="pos1">Cargo 1</SelectItem>
-                                <SelectItem value="pos2">Cargo 2</SelectItem>
+                                {roles.map((role, index) => (
+                                  <SelectItem key={index} value={role.role}>
+                                    {role.role}
+                                  </SelectItem>
+                                ))}
                               </SelectContent>
                             </Select>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="gap-2"
-                            >
-                              <Plus className="size-4" />
-                              Criar novo cargo
-                            </Button>
                           </FormItem>
                         )}
                       />
@@ -398,10 +421,6 @@ export default function NewEmployeeForm() {
                           </FormItem>
                         )}
                       />
-                      {/* <div>
-                        <Label>Número da Folha</Label>
-                        <Input placeholder="Número da Folha" />
-                      </div> */}
                       <FormField
                         name="ctps"
                         render={({ field }) => (
@@ -414,19 +433,28 @@ export default function NewEmployeeForm() {
                         )}
                       />
 
-                      <div>
-                        <Label>Superior direto</Label>
-                        <Select>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="sup1">Superior 1</SelectItem>
-                            <SelectItem value="sup2">Superior 2</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      {/* </div> */}
+                      <FormField
+                        name="directSuperior"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Superior direto</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="sup1">Superior 1</SelectItem>
+                                <SelectItem value="sup2">Superior 2</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </FormItem>
+                        )}
+                      />
                     </div>
 
                     {/* <div>
@@ -437,7 +465,6 @@ export default function NewEmployeeForm() {
 
                   <TabsContent value="personal" className="space-y-6">
                     <div className="grid gap-6 md:grid-cols-3">
-                      {/* First Row */}
                       <FormField
                         name="rg"
                         render={({ field }) => (
@@ -454,6 +481,7 @@ export default function NewEmployeeForm() {
                           </FormItem>
                         )}
                       />
+
                       <FormField
                         name="birthDate"
                         render={({ field }) => (
@@ -493,6 +521,7 @@ export default function NewEmployeeForm() {
                           </FormItem>
                         )}
                       />
+
                       <FormField
                         name="socialName"
                         render={({ field }) => (
@@ -509,7 +538,6 @@ export default function NewEmployeeForm() {
                         )}
                       />
 
-                      {/* Second Row */}
                       <FormField
                         name="cnh"
                         render={({ field }) => (
@@ -525,6 +553,7 @@ export default function NewEmployeeForm() {
                           </FormItem>
                         )}
                       />
+
                       <FormField
                         name="cnhCategory"
                         render={({ field }) => (
@@ -549,23 +578,47 @@ export default function NewEmployeeForm() {
                           </FormItem>
                         )}
                       />
+
                       <FormField
                         name="cnhExpiration"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Data de vencimento da CNH</FormLabel>
-                            <FormControl>
-                              <div className="relative">
-                                <Input placeholder="mm/dd/yyyy" {...field} />
-                                <CalendarIcon className="absolute top-2.5 right-3 size-4 text-gray-400" />
-                              </div>
-                            </FormControl>
-                            <FormMessage />
+                            <FormLabel>Data da vencimento da CNH</FormLabel>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <FormControl>
+                                  <Button
+                                    variant="outline"
+                                    className={cn(
+                                      "w-full pl-3 text-left font-normal",
+                                      !field.value && "text-muted-foreground",
+                                    )}
+                                  >
+                                    {field.value ? (
+                                      format(field.value, "dd/MM/yyyy")
+                                    ) : (
+                                      <span>Selecione uma data</span>
+                                    )}
+                                    <CalendarIcon className="ml-auto size-4" />
+                                  </Button>
+                                </FormControl>
+                              </PopoverTrigger>
+                              <PopoverContent
+                                className="w-auto p-0"
+                                align="start"
+                              >
+                                <Calendar
+                                  mode="single"
+                                  selected={field.value}
+                                  onSelect={field.onChange}
+                                  initialFocus
+                                />
+                              </PopoverContent>
+                            </Popover>
                           </FormItem>
                         )}
                       />
 
-                      {/* Third Row */}
                       <FormField
                         name="cep"
                         render={({ field }) => (
@@ -597,7 +650,6 @@ export default function NewEmployeeForm() {
                         )}
                       />
 
-                      {/* Fourth Row */}
                       <FormField
                         name="neighborhood"
                         render={({ field }) => (
@@ -613,6 +665,7 @@ export default function NewEmployeeForm() {
                           </FormItem>
                         )}
                       />
+
                       <FormField
                         name="city"
                         render={({ field }) => (
@@ -628,6 +681,7 @@ export default function NewEmployeeForm() {
                           </FormItem>
                         )}
                       />
+
                       <FormField
                         name="state"
                         render={({ field }) => (
@@ -643,9 +697,9 @@ export default function NewEmployeeForm() {
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                <SelectItem value="sp">SP</SelectItem>
-                                <SelectItem value="rj">RJ</SelectItem>
-                                <SelectItem value="mg">MG</SelectItem>
+                                {ufsBrasil.map((uf) => (
+                                  <SelectItem value={uf}>{uf}</SelectItem>
+                                ))}
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -653,7 +707,6 @@ export default function NewEmployeeForm() {
                         )}
                       />
 
-                      {/* Fifth Row */}
                       <FormField
                         name="phone"
                         render={({ field }) => (
@@ -669,6 +722,7 @@ export default function NewEmployeeForm() {
                           </FormItem>
                         )}
                       />
+
                       <FormField
                         name="extension"
                         render={({ field }) => (
@@ -685,7 +739,6 @@ export default function NewEmployeeForm() {
                         )}
                       />
 
-                      {/* Sixth Row */}
                       <FormField
                         name="fatherName"
                         render={({ field }) => (
@@ -701,6 +754,7 @@ export default function NewEmployeeForm() {
                           </FormItem>
                         )}
                       />
+
                       <FormField
                         name="motherName"
                         render={({ field }) => (
@@ -716,6 +770,7 @@ export default function NewEmployeeForm() {
                           </FormItem>
                         )}
                       />
+
                       <FormField
                         name="gender"
                         render={({ field }) => (
@@ -745,7 +800,6 @@ export default function NewEmployeeForm() {
                         )}
                       />
 
-                      {/* Seventh Row */}
                       <FormField
                         name="nationality"
                         render={({ field }) => (
@@ -761,6 +815,7 @@ export default function NewEmployeeForm() {
                           </FormItem>
                         )}
                       />
+
                       <FormField
                         name="placeOfBirth"
                         render={({ field }) => (
@@ -776,6 +831,7 @@ export default function NewEmployeeForm() {
                           </FormItem>
                         )}
                       />
+
                       <FormField
                         name="civilStatus"
                         render={({ field }) => (
@@ -811,17 +867,7 @@ export default function NewEmployeeForm() {
                   </TabsContent>
                 </Tabs>
                 <div className="flex gap-4">
-                  <Button
-                    type="submit"
-                    onClick={() =>
-                      toast("Não foi possível cadastrar o funcionário", {
-                        description:
-                          "falta preencher algum campo ou preencheu errado",
-                      })
-                    }
-                  >
-                    Salvar
-                  </Button>
+                  <Button type="submit">Salvar</Button>
                   <Button asChild variant="outline" type="reset">
                     <Link href={"./"}>Cancelar</Link>
                   </Button>

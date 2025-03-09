@@ -9,7 +9,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { MoreHorizontal, Pencil, Trash } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Empresas - Amplo Serviços",
+  description: "Página de empresas da amplo serviços",
+};
 
 export default async function CompaniesPage() {
   const data = await api.getCompanies();

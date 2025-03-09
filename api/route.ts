@@ -51,7 +51,7 @@ export async function login(values: LoginType) {
   if (!res.ok) {
     return data.message;
   } else {
-    return res.status;
+    return data;
   }
 }
 

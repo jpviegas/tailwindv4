@@ -82,6 +82,24 @@ export const registerEmployeeSchema = z.object({
     required_error: "A data de nascimento é obrigatória",
   }),
   socialName: z.string().optional(),
+  cnh: z.string().optional(),
+  cnhCategory: z.string().optional(),
+  cnhExpiration: z.date({
+    required_error: "A data de expiração da CNH é obrigatória",
+  }),
+  cep: z.string().optional(),
+  address: z.string().optional(),
+  neighborhood: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  phone: z.string().optional(),
+  extension: z.string().optional(),
+  fatherName: z.string().optional(),
+  motherName: z.string().optional(),
+  gender: z.string().optional(),
+  nationality: z.string().optional(),
+  placeOfBirth: z.string().optional(),
+  civilStatus: z.string().optional(),
 });
 
 export type DepartmentType = z.infer<typeof registerDepartmentSchema>;
