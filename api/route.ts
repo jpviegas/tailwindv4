@@ -1,6 +1,6 @@
 import { LoginType } from "@/zodSchemas";
 
-export type UserType = { name: string; email: string };
+export type UserType = { _id: string; name: string; email: string };
 
 export async function GetAllUsers(): Promise<LoginType[]> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
@@ -46,13 +46,13 @@ export async function login(values: LoginType) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(values),
   });
-  const data = await res.json();
 
-  if (!res.ok) {
-    return data.message;
-  } else {
-    return data;
+  if (!res) {
+    throw new Error("Erro ao tentar login");
   }
+
+  const data = await res.json();
+  return data;
 }
 
 export async function createUser(values: LoginType) {

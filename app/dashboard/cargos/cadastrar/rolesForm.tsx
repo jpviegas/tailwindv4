@@ -8,6 +8,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { registerRoleSchema } from "@/zodSchemas";
@@ -55,6 +56,7 @@ export default function NewRolesForm() {
                 <FormControl>
                   <Input placeholder="Nome do cargo" {...field} />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -67,6 +69,7 @@ export default function NewRolesForm() {
                 <FormControl>
                   <Input placeholder="Preencha o ID da empresa" {...field} />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />

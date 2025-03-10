@@ -45,15 +45,14 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     try {
-      const res = await login(values);
-      console.log(res);
+      const { message, success, token } = await login(values);
 
-      if (!res.success) {
-        toast.error(res);
+      if (!success) {
+        toast.error(message);
       } else {
         fetchUser(`${values.email}`);
-        Cookies.set("token", res.token, { expires: 7, path: "/" });
-        toast.success(res.message);
+        Cookies.set("token", token, { expires: 7, path: "/" });
+        toast.success(message);
         router.push("/dashboard");
       }
     } catch {

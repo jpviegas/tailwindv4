@@ -1,9 +1,18 @@
-import { RoleType } from "@/zodSchemas";
-
-type RoleTypeWithId = RoleType & { _id: string };
+import { RoleType, RoleTypeWithId } from "@/zodSchemas";
 
 export async function GetAllRoles(): Promise<{
+  success: boolean;
   count: number;
+  pagination: {
+    total: number;
+    page: number;
+    totalPages: number;
+    limit: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+    nextPage: number;
+    prevPage: null | number;
+  };
   roles: RoleTypeWithId[];
 }> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roles/`, {
@@ -15,17 +24,43 @@ export async function GetAllRoles(): Promise<{
   return data;
 }
 
-export async function GetCompanyRoles(company: string): Promise<{
-  count: number;
+export async function GetCompanyRoles(
+  company: string,
+  role?: string,
+  page?: string,
+): Promise<{
+  success: boolean;
+  pagination: {
+    total: number;
+    page: number;
+    totalPages: number;
+    limit: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+    nextPage: number;
+    prevPage: null | number;
+  };
   roles: RoleTypeWithId[];
 }> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/roles/${company}`,
-    {
-      method: "GET",
-      headers: { "content-type": "application/json" },
-    },
-  );
+  let url = `${process.env.NEXT_PUBLIC_API_URL}/roles/${company}`;
+
+  const queryParams = new URLSearchParams();
+
+  if (role) {
+    queryParams.append("role", role);
+  }
+  if (page) {
+    queryParams.append("page", page);
+  }
+
+  if (queryParams.toString()) {
+    url += `?${queryParams.toString()}`;
+  }
+
+  const res = await fetch(url, {
+    method: "GET",
+    headers: { "content-type": "application/json" },
+  });
 
   const data = await res.json();
   return data;

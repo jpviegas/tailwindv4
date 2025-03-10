@@ -707,7 +707,9 @@ export default function NewEmployeeForm({ roles }: { roles: RoleType[] }) {
                               </FormControl>
                               <SelectContent>
                                 {ufsBrasil.map((uf) => (
-                                  <SelectItem value={uf}>{uf}</SelectItem>
+                                  <SelectItem key={uf} value={uf}>
+                                    {uf}
+                                  </SelectItem>
                                 ))}
                               </SelectContent>
                             </Select>
