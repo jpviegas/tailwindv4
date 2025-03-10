@@ -1,6 +1,4 @@
-// import { GetAllRoles } from "@/api/dashboard/cargos/route";
 import { Button } from "@/components/ui/button";
-
 import { MoreHorizontal } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -12,8 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default async function JobRolesPage() {
-  // const { count, roles } = await GetAllRoles();
-
   return (
     <main className="container mx-auto flex h-full flex-col justify-evenly gap-8">
       <div className="flex items-center justify-between border-b pb-8">

@@ -1,6 +1,4 @@
-import { DepartmentType } from "@/zodSchemas";
-
-type DepartmentTypeWithId = DepartmentType & { _id: string };
+import { DepartmentType, DepartmentTypeWithId } from "@/zodSchemas";
 
 export async function GetAllDepartments(): Promise<{
   count: number;
@@ -15,17 +13,43 @@ export async function GetAllDepartments(): Promise<{
   return data;
 }
 
-export async function GetCompanyDepartments(department: string): Promise<{
-  count: number;
+export async function GetCompanyDepartments(
+  company: string,
+  department?: string,
+  page?: string,
+): Promise<{
+  success: boolean;
+  pagination: {
+    total: number;
+    page: number;
+    totalPages: number;
+    limit: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+    nextPage: number;
+    prevPage: null | number;
+  };
   departments: DepartmentTypeWithId[];
 }> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/departments/${department}`,
-    {
-      method: "GET",
-      headers: { "content-type": "application/json" },
-    },
-  );
+  let url = `${process.env.NEXT_PUBLIC_API_URL}/departments/${company}`;
+
+  const queryParams = new URLSearchParams();
+
+  if (department) {
+    queryParams.append("department", department);
+  }
+  if (page) {
+    queryParams.append("page", page);
+  }
+
+  if (queryParams.toString()) {
+    url += `?${queryParams.toString()}`;
+  }
+
+  const res = await fetch(url, {
+    method: "GET",
+    headers: { "content-type": "application/json" },
+  });
 
   const data = await res.json();
   return data;
