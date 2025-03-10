@@ -1,12 +1,15 @@
-import { api } from "@/api/fake";
+"use client";
+
 import { ModeToggle } from "@/components/themeToggle";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useUser } from "@/context/UserContext";
 import logo from "@/public/logo.png";
 import Image from "next/image";
 import Link from "next/link";
 
-export default async function HeaderComponent() {
-  const data = await api.getCompanyInfo();
+export default function HeaderComponent() {
+  const { user } = useUser();
+
   return (
     <header className="flex h-16 items-center justify-between px-8">
       <Link href={"/dashboard"} className="size-12">
@@ -18,7 +21,7 @@ export default async function HeaderComponent() {
 
         <ModeToggle />
 
-        <h1>{data.name}</h1>
+        <h1>{user?.email}</h1>
       </div>
     </header>
   );

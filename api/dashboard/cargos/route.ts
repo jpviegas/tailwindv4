@@ -40,9 +40,8 @@ export async function CreateRole(
     body: JSON.stringify(values),
   });
 
-  if (!res.ok) {
-    const data = await res.json();
-    throw new Error(data.error || "Erro ao cadastrar o cargo");
+  if (!res) {
+    throw new Error("Erro ao cadastrar o cargo");
   }
 
   const data = await res.json();

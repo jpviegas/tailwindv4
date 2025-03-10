@@ -37,8 +37,7 @@ export default async function DepartmentPage() {
         <div className="flex gap-2">
           <Button asChild className="gap-2">
             <Link href={"departamentos/cadastrar"}>
-              <span>+</span>
-              Adicionar
+              <span>+ Adicionar</span>
             </Link>
           </Button>
           <Button variant="ghost" size="icon">

@@ -1,4 +1,4 @@
-import { api } from "@/api/fake";
+import { GetAllCompanies } from "@/api/dashboard/empresas/route";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -18,7 +18,8 @@ export const metadata: Metadata = {
 };
 
 export default async function CompaniesPage() {
-  const data = await api.getCompanies();
+  const { companies } = await GetAllCompanies();
+
   return (
     <main className="container mx-auto flex h-full flex-col justify-evenly gap-8">
       <div className="flex items-center justify-between border-b pb-8">
@@ -26,8 +27,7 @@ export default async function CompaniesPage() {
         <div className="flex gap-2">
           <Button asChild>
             <Link href={"empresas/cadastrar"}>
-              <span>+</span>
-              Adicionar
+              <span>+ Adicionar</span>
             </Link>
           </Button>
           <Button variant="ghost" size="icon">
@@ -46,15 +46,15 @@ export default async function CompaniesPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.map((company) => (
-              <TableRow key={company.cnpj}>
-                <TableCell>{company.name}</TableCell>
+            {companies.map((company) => (
+              <TableRow key={company._id}>
+                <TableCell>{company.companyName}</TableCell>
                 <TableCell>{company.cnpj}</TableCell>
                 <TableCell className="flex items-center justify-between">
-                  {company.employeeQuantity}
+                  {/* {company.employeeQuantity} */}
                   <div className="flex justify-end gap-2">
                     <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <Link href={`empresas/${company.id}`}>
+                      <Link href={`empresas/${company._id}`}>
                         <Pencil className="size-4" />
                       </Link>
                     </Button>

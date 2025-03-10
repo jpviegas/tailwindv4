@@ -1,6 +1,6 @@
 "use client";
 
-// import { CreateEmployee } from "@/api/dashboard/funcionarios/route";
+import { CreateEmployee } from "@/api/dashboard/funcionarios/route";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
@@ -48,8 +48,6 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 export default function NewEmployeeForm({ roles }: { roles: RoleType[] }) {
-  console.log("roles", roles);
-
   const [activeTab, setActiveTab] = useState("general");
   type FormValues = z.infer<typeof registerEmployeeSchema>;
 
@@ -94,16 +92,15 @@ export default function NewEmployeeForm({ roles }: { roles: RoleType[] }) {
 
   async function onSubmit(values: FormValues) {
     try {
-      console.log(values);
-      // const message = await CreateEmployee(values);
+      const { message, success } = await CreateEmployee(values);
 
-      // if (!message) {
-      //   toast("Não foi possível cadastrar o funcionário.");
-      // } else {
-      //   toast.success("O funcionário foi cadastrado com sucesso");
-      // }
-    } catch {
-      toast("Não foi possível cadastrar o funcionário.");
+      if (!success) {
+        toast.error(`${message}`);
+      } else {
+        toast.success(`${message}`);
+      }
+    } catch (message) {
+      toast.error(`${message}`);
     }
   }
 
@@ -129,6 +126,7 @@ export default function NewEmployeeForm({ roles }: { roles: RoleType[] }) {
                         <FormControl>
                           <Input placeholder="Nome" {...field} />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -140,6 +138,7 @@ export default function NewEmployeeForm({ roles }: { roles: RoleType[] }) {
                         <FormControl>
                           <Input placeholder="PIS" {...field} />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -156,6 +155,7 @@ export default function NewEmployeeForm({ roles }: { roles: RoleType[] }) {
                             {...field}
                           />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -167,6 +167,7 @@ export default function NewEmployeeForm({ roles }: { roles: RoleType[] }) {
                         <FormControl>
                           <Input placeholder="Matrícula" {...field} />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -203,6 +204,7 @@ export default function NewEmployeeForm({ roles }: { roles: RoleType[] }) {
                             />
                           </PopoverContent>
                         </Popover>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -214,6 +216,7 @@ export default function NewEmployeeForm({ roles }: { roles: RoleType[] }) {
                         <FormControl>
                           <Input placeholder="amplo" {...field} />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -236,10 +239,11 @@ export default function NewEmployeeForm({ roles }: { roles: RoleType[] }) {
                             <SelectItem value="hour2">18:00 / 06:00</SelectItem>
                           </SelectContent>
                         </Select>
-                        <Button variant="outline" size="sm" className="gap-2">
+                        {/* <Button variant="outline" size="sm" className="gap-2">
                           <Plus className="size-4" />
                           Criar novo Horário
-                        </Button>
+                        </Button> */}
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -472,7 +476,12 @@ export default function NewEmployeeForm({ roles }: { roles: RoleType[] }) {
                             <FormLabel>RG</FormLabel>
                             <FormControl>
                               <div className="relative">
-                                <Input placeholder="RG" {...field} />
+                                <Input
+                                  placeholder="RG"
+                                  maxLength={9}
+                                  min={0}
+                                  {...field}
+                                />
                                 <Search className="absolute top-2.5 right-3 size-4 text-gray-400" />
                                 {/* <Search className="absolute ml-auto size-4 text-gray-400" /> */}
                               </div>
@@ -693,7 +702,7 @@ export default function NewEmployeeForm({ roles }: { roles: RoleType[] }) {
                             >
                               <FormControl>
                                 <SelectTrigger>
-                                  <SelectValue placeholder="Selecione" />
+                                  <SelectValue placeholder="Selecione a UF" />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>

@@ -2,7 +2,7 @@ import { LoginType } from "@/zodSchemas";
 
 export type UserType = { name: string; email: string };
 
-export async function GET(): Promise<LoginType[]> {
+export async function GetAllUsers(): Promise<LoginType[]> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
     method: "GET",
     headers: { "content-type": "application/json" },

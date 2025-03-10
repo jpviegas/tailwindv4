@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { useUser } from "@/context/UserContext";
 import { loginSchema } from "@/zodSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Cookies from "js-cookie";
 import { Eye, EyeOff, LoaderCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -45,10 +46,13 @@ export function LoginForm() {
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     try {
       const res = await login(values);
+      console.log(res);
+
       if (!res.success) {
         toast.error(res);
       } else {
         fetchUser(`${values.email}`);
+        Cookies.set("token", res.token, { expires: 7, path: "/" });
         toast.success(res.message);
         router.push("/dashboard");
       }

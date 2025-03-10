@@ -63,7 +63,10 @@ export type EmployeeType = z.infer<typeof registerEmployeeSchema>;
 export const registerEmployeeSchema = z.object({
   name: z.string().min(10, "O nome é obrigarório"),
   pis: z.string().min(1, "O PIS é obrigatório"),
-  cpf: z.string().nonempty().length(11, "Preencha apenas os 11 números do CPF"),
+  cpf: z
+    .string()
+    .nonempty("O CPF é obrigatório")
+    .length(11, "Preencha apenas os 11 números do CPF"),
   registration: z.string().min(1, "O número de matrícula é obrigatório"),
   admissionDate: z.date({
     required_error: "A data de admissão é obrigatória",
@@ -77,7 +80,10 @@ export const registerEmployeeSchema = z.object({
   sheetNumber: z.string(),
   ctps: z.string(),
   directSuperior: z.string().optional(),
-  rg: z.string(),
+  rg: z
+    .string()
+    .nonempty("O RG é obrigatório")
+    .length(9, "Preencha apenas os 9 números do RG"),
   birthDate: z.date({
     required_error: "A data de nascimento é obrigatória",
   }),

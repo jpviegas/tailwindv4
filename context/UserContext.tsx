@@ -23,8 +23,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       },
     );
     const data = await res.json();
+
     if (res.ok) {
-      setUser(data);
+      setUser(data.user);
     } else {
       console.error(data.message);
     }

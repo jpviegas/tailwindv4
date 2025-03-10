@@ -41,8 +41,7 @@ export default async function EmployeesPage() {
           </Button>
           <Button asChild className="gap-2">
             <Link href={"funcionarios/cadastrar"}>
-              <span>+</span>
-              Adicionar
+              <span>+ Adicionar</span>
             </Link>
           </Button>
           <Button variant="ghost" size="icon">

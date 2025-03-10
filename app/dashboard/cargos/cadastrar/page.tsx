@@ -1,5 +1,11 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { Metadata } from "next";
 import NewRolesForm from "./rolesForm";
+
+export const metadata: Metadata = {
+  title: "Cadastrar cargo - Amplo Serviços",
+  description: "Página para cadastro de cargo da amplo serviços",
+};
 
 export default async function Roles() {
   return (
