@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { registerEmployeeSchema, RoleType, ufsBrasil } from "@/zodSchemas";
+import { registerEmployeeSchema, ufsBrasil } from "@/zodSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import {
@@ -47,7 +47,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-export default function NewEmployeeForm({ roles }: { roles: RoleType[] }) {
+export default function NewEmployeeForm() {
   const [activeTab, setActiveTab] = useState("general");
   type FormValues = z.infer<typeof registerEmployeeSchema>;
 
@@ -403,11 +403,11 @@ export default function NewEmployeeForm({ roles }: { roles: RoleType[] }) {
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                {roles.map((role, index) => (
+                                {/* {roles.map((role, index) => (
                                   <SelectItem key={index} value={role.role}>
                                     {role.role}
                                   </SelectItem>
-                                ))}
+                                ))} */}
                               </SelectContent>
                             </Select>
                           </FormItem>
