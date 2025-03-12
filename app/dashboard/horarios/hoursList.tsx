@@ -1,6 +1,6 @@
 "use client";
 
-import { GetCompanyDepartments } from "@/api/dashboard/departamentos/route";
+import { GetCompanyHours } from "@/api/dashboard/horarios/route";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -28,7 +28,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useUser } from "@/context/UserContext";
-import { DepartmentTypeWithId } from "@/zodSchemas";
+import { WorkingHourTypeWithId } from "@/zodSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import debounce from "lodash/debounce";
 import { Pencil, Trash } from "lucide-react";
@@ -42,8 +42,8 @@ const FormSchema = z.object({
   search: z.string().optional(),
 });
 
-export function DepartmentsList() {
-  const [departments, setDepartments] = useState<DepartmentTypeWithId[]>([]);
+export function HoursList() {
+  const [hours, setHours] = useState<WorkingHourTypeWithId[]>([]);
   const [pagination, setPagination] = useState<{
     total: number;
     page: number;
@@ -73,7 +73,7 @@ export function DepartmentsList() {
     },
   });
 
-  const fetchDepartments = async (values: z.infer<typeof FormSchema>) => {
+  const fetchHours = async (values: z.infer<typeof FormSchema>) => {
     try {
       setIsLoading(true);
       if (!user?._id) {
@@ -83,46 +83,46 @@ export function DepartmentsList() {
       const {
         success,
         pagination: paginationData,
-        departments,
-      } = await GetCompanyDepartments(
+        hours,
+      } = await GetCompanyHours(
         user._id,
         values.search,
         pagination.page.toString(),
       );
 
       if (success) {
-        setDepartments(departments);
+        setHours(hours);
         setPagination(paginationData);
       }
     } catch (error) {
-      console.error("Erro ao buscar departamentos da empresa:", error);
-      toast.error("Não foi possível carregar os departamentos da empresa.");
+      console.error("Erro ao buscar cargos da empresa:", error);
+      toast.error("Não foi possível carregar os cargos da empresa.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const debouncedFetchDepartments = useCallback(
+  const debouncedFetchHours = useCallback(
     debounce((values: z.infer<typeof FormSchema>) => {
-      fetchDepartments(values);
+      fetchHours(values);
     }, 500),
     [user?._id],
   );
 
   useEffect(() => {
     const subscription = form.watch((values) => {
-      debouncedFetchDepartments(values as z.infer<typeof FormSchema>);
+      debouncedFetchHours(values as z.infer<typeof FormSchema>);
     });
 
     return () => {
       subscription.unsubscribe();
-      debouncedFetchDepartments.cancel();
+      debouncedFetchHours.cancel();
     };
-  }, [form, debouncedFetchDepartments]);
+  }, [form, debouncedFetchHours]);
 
   useEffect(() => {
-    fetchDepartments(form.getValues());
-  }, [form, debouncedFetchDepartments]);
+    fetchHours(form.getValues());
+  }, [form]);
 
   const handlePageChange = async (newPage: number) => {
     try {
@@ -134,15 +134,15 @@ export function DepartmentsList() {
       const {
         success,
         pagination: paginationData,
-        departments,
-      } = await GetCompanyDepartments(
+        hours,
+      } = await GetCompanyHours(
         user._id,
         form.getValues("search"),
         newPage.toString(),
       );
 
       if (success) {
-        setDepartments(departments);
+        setHours(hours);
         setPagination(paginationData);
       }
     } catch (error) {
@@ -158,7 +158,7 @@ export function DepartmentsList() {
       <Form {...form}>
         <form
           className="flex items-center justify-between"
-          onSubmit={form.handleSubmit(fetchDepartments)}
+          onSubmit={form.handleSubmit(fetchHours)}
         >
           <FormField
             control={form.control}
@@ -167,7 +167,7 @@ export function DepartmentsList() {
               <FormItem className="flex items-center gap-4">
                 <FormLabel>Buscar:</FormLabel>
                 <FormControl>
-                  <Input placeholder="buscar departamento" {...field} />
+                  <Input placeholder="buscar horário de trabalho" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -179,7 +179,7 @@ export function DepartmentsList() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Departamento</TableHead>
+              <TableHead>Horário de trabalho</TableHead>
               <TableHead>Quantidade de Funcionários</TableHead>
             </TableRow>
           </TableHeader>
@@ -193,26 +193,24 @@ export function DepartmentsList() {
                   </div>
                 </TableCell>
               </TableRow>
-            ) : departments.length === 0 ? (
+            ) : hours.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={2}
                   className="text-muted-foreground h-24 text-center"
                 >
-                  Nenhum departamento encontrado.
+                  Nenhum horário encontrado.
                 </TableCell>
               </TableRow>
             ) : (
-              departments.map((department) => (
-                <TableRow key={department._id}>
-                  <TableCell className="w-1/2">
-                    {department.department}
-                  </TableCell>
+              hours.map((hour) => (
+                <TableRow key={hour._id}>
+                  <TableCell className="w-1/2">{hour.hour}</TableCell>
                   <TableCell className="flex w-full items-center justify-between">
                     10
                     <div className="flex justify-end gap-2">
                       <Button variant="ghost" size="icon" className="size-8">
-                        <Link href={`departments/${department._id}`}>
+                        <Link href={`hours/${hour._id}`}>
                           <Pencil className="size-4" />
                         </Link>
                       </Button>
@@ -230,7 +228,7 @@ export function DepartmentsList() {
 
       <div className="flex items-center justify-between py-4">
         <p className="text-muted-foreground text-sm">
-          {departments.length > 0 ? (
+          {hours.length > 0 ? (
             <>
               Mostrando{" "}
               {pagination.page === 1 ? 1 : (pagination.page - 1) * 10 + 1}

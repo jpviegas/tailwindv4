@@ -23,8 +23,8 @@ export default function NewWorkingHourForm() {
   const form = useForm<FormValues>({
     resolver: zodResolver(registerWorkingHourSchema),
     defaultValues: {
-      name: "",
-      type: "",
+      hour: "",
+      company: "",
     },
   });
 
@@ -56,7 +56,7 @@ export default function NewWorkingHourForm() {
                 <div className="grid gap-4 md:grid-cols-3">
                   <FormField
                     control={form.control}
-                    name="name"
+                    name="hour"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Nome</FormLabel>
@@ -68,7 +68,7 @@ export default function NewWorkingHourForm() {
                   />
                   <FormField
                     control={form.control}
-                    name="type"
+                    name="company"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Empresa</FormLabel>

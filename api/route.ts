@@ -40,7 +40,16 @@ export async function GetUserById(
   return data;
 }
 
-export async function login(values: LoginType) {
+export async function login(values: LoginType): Promise<{
+  message: string;
+  success: boolean;
+  token: string;
+  user: {
+    email: string;
+    name: string;
+    id: string;
+  };
+}> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -52,11 +61,12 @@ export async function login(values: LoginType) {
   }
 
   const data = await res.json();
+
   return data;
 }
 
 export async function createUser(values: LoginType) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/user`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(values),

@@ -3,11 +3,11 @@
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Fragment } from "react";
 
@@ -23,7 +23,7 @@ export default function NavLinks() {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            <Link href="/">Início</Link>
           </BreadcrumbItem>
           {segments.map((segment, index) => (
             <Fragment key={index}>
@@ -34,9 +34,9 @@ export default function NavLinks() {
                     <span className="capitalize">{segment}</span>
                   </BreadcrumbPage>
                 ) : (
-                  <BreadcrumbLink href={getSegmentPath(index)}>
+                  <Link href={getSegmentPath(index)}>
                     <span className="capitalize">{segment}</span>
-                  </BreadcrumbLink>
+                  </Link>
                 )}
               </BreadcrumbItem>
             </Fragment>

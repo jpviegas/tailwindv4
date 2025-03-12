@@ -37,6 +37,7 @@ export const loginSchema = z.object({
 });
 
 export type CompanyType = z.infer<typeof registerCompanySchema>;
+export type CompanyTypeWithId = CompanyType & { _id: string };
 export const registerCompanySchema = z.object({
   companyName: z.string().min(10, "O nome é obrigarório"),
   nickname: z.string().min(1, "O nome fantasia é obrigatório"),
@@ -121,11 +122,12 @@ export type RoleType = z.infer<typeof registerRoleSchema>;
 export type RoleTypeWithId = RoleType & { _id: string };
 export const registerRoleSchema = z.object({
   role: z.string().min(1, "O nome é obrigarório"),
-  company: z.string().min(1, "A empresa é obrigarória"),
+  company: z.string().min(1, "O ID da empresa é obrigarório"),
 });
 
 export type WorkingHourType = z.infer<typeof registerWorkingHourSchema>;
+export type WorkingHourTypeWithId = WorkingHourType & { _id: string };
 export const registerWorkingHourSchema = z.object({
-  name: z.string().min(1, "O nome é obrigarório"),
-  type: z.string().min(1, "O tipo do horário é obrigatório"),
+  hour: z.string().min(1, "O nome é obrigarório"),
+  company: z.string().min(1, "O ID da empresa é obrigatório"),
 });

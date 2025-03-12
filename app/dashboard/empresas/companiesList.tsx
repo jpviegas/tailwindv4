@@ -1,6 +1,6 @@
 "use client";
 
-import { GetCompanyDepartments } from "@/api/dashboard/departamentos/route";
+import { GetCompanies } from "@/api/dashboard/empresas/route";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -28,7 +28,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useUser } from "@/context/UserContext";
-import { DepartmentTypeWithId } from "@/zodSchemas";
+import { CompanyTypeWithId } from "@/zodSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import debounce from "lodash/debounce";
 import { Pencil, Trash } from "lucide-react";
@@ -42,8 +42,8 @@ const FormSchema = z.object({
   search: z.string().optional(),
 });
 
-export function DepartmentsList() {
-  const [departments, setDepartments] = useState<DepartmentTypeWithId[]>([]);
+export function CompaniesList() {
+  const [companies, setCompanies] = useState<CompanyTypeWithId[]>([]);
   const [pagination, setPagination] = useState<{
     total: number;
     page: number;
@@ -73,7 +73,7 @@ export function DepartmentsList() {
     },
   });
 
-  const fetchDepartments = async (values: z.infer<typeof FormSchema>) => {
+  const fetchCompanies = async (values: z.infer<typeof FormSchema>) => {
     try {
       setIsLoading(true);
       if (!user?._id) {
@@ -83,46 +83,46 @@ export function DepartmentsList() {
       const {
         success,
         pagination: paginationData,
-        departments,
-      } = await GetCompanyDepartments(
+        companies,
+      } = await GetCompanies(
         user._id,
         values.search,
         pagination.page.toString(),
       );
 
       if (success) {
-        setDepartments(departments);
+        setCompanies(companies);
         setPagination(paginationData);
       }
     } catch (error) {
-      console.error("Erro ao buscar departamentos da empresa:", error);
-      toast.error("Não foi possível carregar os departamentos da empresa.");
+      console.error("Erro ao buscar empresas:", error);
+      toast.error("Não foi possível carregar as empresas.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const debouncedFetchDepartments = useCallback(
+  const debouncedFetchCompanies = useCallback(
     debounce((values: z.infer<typeof FormSchema>) => {
-      fetchDepartments(values);
+      fetchCompanies(values);
     }, 500),
     [user?._id],
   );
 
   useEffect(() => {
     const subscription = form.watch((values) => {
-      debouncedFetchDepartments(values as z.infer<typeof FormSchema>);
+      debouncedFetchCompanies(values as z.infer<typeof FormSchema>);
     });
 
     return () => {
       subscription.unsubscribe();
-      debouncedFetchDepartments.cancel();
+      debouncedFetchCompanies.cancel();
     };
-  }, [form, debouncedFetchDepartments]);
+  }, [form, debouncedFetchCompanies]);
 
   useEffect(() => {
-    fetchDepartments(form.getValues());
-  }, [form, debouncedFetchDepartments]);
+    fetchCompanies(form.getValues());
+  }, [form, fetchCompanies]);
 
   const handlePageChange = async (newPage: number) => {
     try {
@@ -134,15 +134,15 @@ export function DepartmentsList() {
       const {
         success,
         pagination: paginationData,
-        departments,
-      } = await GetCompanyDepartments(
+        companies,
+      } = await GetCompanies(
         user._id,
         form.getValues("search"),
         newPage.toString(),
       );
 
       if (success) {
-        setDepartments(departments);
+        setCompanies(companies);
         setPagination(paginationData);
       }
     } catch (error) {
@@ -158,7 +158,7 @@ export function DepartmentsList() {
       <Form {...form}>
         <form
           className="flex items-center justify-between"
-          onSubmit={form.handleSubmit(fetchDepartments)}
+          onSubmit={form.handleSubmit(fetchCompanies)}
         >
           <FormField
             control={form.control}
@@ -167,7 +167,7 @@ export function DepartmentsList() {
               <FormItem className="flex items-center gap-4">
                 <FormLabel>Buscar:</FormLabel>
                 <FormControl>
-                  <Input placeholder="buscar departamento" {...field} />
+                  <Input placeholder="buscar empresa" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -179,40 +179,39 @@ export function DepartmentsList() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Departamento</TableHead>
-              <TableHead>Quantidade de Funcionários</TableHead>
+              <TableHead>Nome</TableHead>
+              <TableHead>CNPJ</TableHead>
+              <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={2} className="h-24 text-center">
+                <TableCell colSpan={3} className="h-24 text-center">
                   <div className="flex items-center justify-center gap-2">
                     <div className="border-primary h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
                     Carregando...
                   </div>
                 </TableCell>
               </TableRow>
-            ) : departments.length === 0 ? (
+            ) : companies.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={2}
+                  colSpan={3}
                   className="text-muted-foreground h-24 text-center"
                 >
-                  Nenhum departamento encontrado.
+                  Nenhuma empresa encontrada.
                 </TableCell>
               </TableRow>
             ) : (
-              departments.map((department) => (
-                <TableRow key={department._id}>
-                  <TableCell className="w-1/2">
-                    {department.department}
-                  </TableCell>
-                  <TableCell className="flex w-full items-center justify-between">
-                    10
+              companies.map((company) => (
+                <TableRow key={company._id}>
+                  <TableCell>{company.companyName}</TableCell>
+                  <TableCell>{company.cnpj}</TableCell>
+                  <TableCell className="flex items-center justify-end">
                     <div className="flex justify-end gap-2">
                       <Button variant="ghost" size="icon" className="size-8">
-                        <Link href={`departments/${department._id}`}>
+                        <Link href={`empresas/${company._id}`}>
                           <Pencil className="size-4" />
                         </Link>
                       </Button>
@@ -230,7 +229,7 @@ export function DepartmentsList() {
 
       <div className="flex items-center justify-between py-4">
         <p className="text-muted-foreground text-sm">
-          {departments.length > 0 ? (
+          {companies.length > 0 ? (
             <>
               Mostrando{" "}
               {pagination.page === 1 ? 1 : (pagination.page - 1) * 10 + 1}

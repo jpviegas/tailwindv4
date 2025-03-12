@@ -122,7 +122,7 @@ export function RolesList() {
 
   useEffect(() => {
     fetchRoles(form.getValues());
-  }, [fetchRoles, form]);
+  }, [form, fetchRoles]);
 
   const handlePageChange = async (newPage: number) => {
     try {
@@ -232,7 +232,7 @@ export function RolesList() {
             <>
               Mostrando{" "}
               {pagination.page === 1 ? 1 : (pagination.page - 1) * 10 + 1}
-              {" - "}
+              {" a "}
               {pagination.page * 10 > pagination.total
                 ? pagination.total
                 : pagination.page * 10}

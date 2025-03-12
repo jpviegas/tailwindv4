@@ -1,6 +1,6 @@
-import { CompanyType, CompanyTypeWithId } from "@/zodSchemas";
+import { WorkingHourType, WorkingHourTypeWithId } from "@/zodSchemas";
 
-export async function GetAllCompanies(): Promise<{
+export async function GetAllHours(): Promise<{
   success: boolean;
   count: number;
   pagination: {
@@ -13,9 +13,9 @@ export async function GetAllCompanies(): Promise<{
     nextPage: number;
     prevPage: null | number;
   };
-  companies: CompanyTypeWithId[];
+  roles: WorkingHourTypeWithId[];
 }> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/companies/`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hours/`, {
     method: "GET",
     headers: { "content-type": "application/json" },
   });
@@ -24,9 +24,9 @@ export async function GetAllCompanies(): Promise<{
   return data;
 }
 
-export async function GetCompanies(
+export async function GetCompanyHours(
   company: string,
-  search?: string,
+  hour?: string,
   page?: string,
 ): Promise<{
   success: boolean;
@@ -40,14 +40,14 @@ export async function GetCompanies(
     nextPage: number;
     prevPage: null | number;
   };
-  companies: CompanyTypeWithId[];
+  hours: WorkingHourTypeWithId[];
 }> {
-  let url = `${process.env.NEXT_PUBLIC_API_URL}/companies/${company}`;
+  let url = `${process.env.NEXT_PUBLIC_API_URL}/hours/${company}`;
 
   const queryParams = new URLSearchParams();
 
-  if (search) {
-    queryParams.append("search", search);
+  if (hour) {
+    queryParams.append("hour", hour);
   }
   if (page) {
     queryParams.append("page", page);
@@ -66,19 +66,19 @@ export async function GetCompanies(
   return data;
 }
 
-export async function CreateCompany(
-  values: CompanyType,
-): Promise<{ message: string; success: boolean }> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/companies`, {
+export async function CreateHour(
+  values: WorkingHourType,
+): Promise<{ message: string }> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/hours`, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(values),
   });
 
   if (!res) {
-    throw new Error("Erro ao cadastrar a empresa");
+    throw new Error("Erro ao cadastrar o cargo");
   }
 
   const data = await res.json();
-  return data;
+  return data.message;
 }
