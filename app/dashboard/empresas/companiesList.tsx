@@ -122,7 +122,7 @@ export function CompaniesList() {
 
   useEffect(() => {
     fetchCompanies(form.getValues());
-  }, [form, fetchCompanies]);
+  }, [form]);
 
   const handlePageChange = async (newPage: number) => {
     try {

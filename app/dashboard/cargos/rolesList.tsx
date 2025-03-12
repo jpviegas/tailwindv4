@@ -122,7 +122,7 @@ export function RolesList() {
 
   useEffect(() => {
     fetchRoles(form.getValues());
-  }, [form, fetchRoles]);
+  }, [form]);
 
   const handlePageChange = async (newPage: number) => {
     try {

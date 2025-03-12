@@ -73,40 +73,43 @@ export function HoursList() {
     },
   });
 
-  const fetchHours = async (values: z.infer<typeof FormSchema>) => {
-    try {
-      setIsLoading(true);
-      if (!user?._id) {
-        throw new Error("User ID is required");
-      }
+  const fetchHours = useCallback(
+    async (values: z.infer<typeof FormSchema>) => {
+      try {
+        setIsLoading(true);
+        if (!user?._id) {
+          throw new Error("User ID is required");
+        }
 
-      const {
-        success,
-        pagination: paginationData,
-        hours,
-      } = await GetCompanyHours(
-        user._id,
-        values.search,
-        pagination.page.toString(),
-      );
+        const {
+          success,
+          pagination: paginationData,
+          hours,
+        } = await GetCompanyHours(
+          user._id,
+          values.search,
+          pagination.page.toString(),
+        );
 
-      if (success) {
-        setHours(hours);
-        setPagination(paginationData);
+        if (success) {
+          setHours(hours);
+          setPagination(paginationData);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar horas:", error);
+        toast.error("Não foi possível carregar as horas.");
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Erro ao buscar cargos da empresa:", error);
-      toast.error("Não foi possível carregar os cargos da empresa.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    [user?._id, pagination.page],
+  );
 
   const debouncedFetchHours = useCallback(
     debounce((values: z.infer<typeof FormSchema>) => {
       fetchHours(values);
     }, 500),
-    [user?._id],
+    [fetchHours],
   );
 
   useEffect(() => {
@@ -122,7 +125,7 @@ export function HoursList() {
 
   useEffect(() => {
     fetchHours(form.getValues());
-  }, [form]);
+  }, [fetchHours]);
 
   const handlePageChange = async (newPage: number) => {
     try {
