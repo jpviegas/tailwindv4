@@ -39,7 +39,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 const FormSchema = z.object({
-  search: z.string().optional(),
+  role: z.string(),
 });
 
 export function RolesList() {
@@ -69,7 +69,7 @@ export function RolesList() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      search: "",
+      role: "",
     },
   });
 
@@ -86,7 +86,7 @@ export function RolesList() {
         roles,
       } = await GetCompanyRoles(
         user._id,
-        values.search,
+        values.role,
         pagination.page.toString(),
       );
 
@@ -137,7 +137,7 @@ export function RolesList() {
         roles,
       } = await GetCompanyRoles(
         user._id,
-        form.getValues("search"),
+        form.getValues("role"),
         newPage.toString(),
       );
 
@@ -162,7 +162,7 @@ export function RolesList() {
         >
           <FormField
             control={form.control}
-            name="search"
+            name="role"
             render={({ field }) => (
               <FormItem className="flex items-center gap-4">
                 <FormLabel>Buscar:</FormLabel>

@@ -26,8 +26,8 @@ export async function GetAllRoles(): Promise<{
 
 export async function GetCompanyRoles(
   company: string,
-  role?: string,
-  page?: string,
+  role: string,
+  page: string,
 ): Promise<{
   success: boolean;
   pagination: {
@@ -42,13 +42,18 @@ export async function GetCompanyRoles(
   };
   roles: RoleTypeWithId[];
 }> {
-  let url = `${process.env.NEXT_PUBLIC_API_URL}/roles/${company}`;
+  let url = `${process.env.NEXT_PUBLIC_API_URL}/roles/`;
 
   const queryParams = new URLSearchParams();
+
+  if (company) {
+    queryParams.append("company", company);
+  }
 
   if (role) {
     queryParams.append("role", role);
   }
+
   if (page) {
     queryParams.append("page", page);
   }
@@ -66,9 +71,34 @@ export async function GetCompanyRoles(
   return data;
 }
 
+export async function GetCompanyRoleById(role: string): Promise<{
+  success: boolean;
+  pagination: {
+    total: number;
+    page: number;
+    totalPages: number;
+    limit: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+    nextPage: number;
+    prevPage: null | number;
+  };
+  roles: RoleTypeWithId[];
+}> {
+  let url = `${process.env.NEXT_PUBLIC_API_URL}/roles/${role}`;
+
+  const res = await fetch(url, {
+    method: "GET",
+    headers: { "content-type": "application/json" },
+  });
+
+  const data = await res.json();
+  return data;
+}
+
 export async function CreateRole(
   values: RoleType,
-): Promise<{ message: string }> {
+): Promise<{ success: boolean; message: string }> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roles`, {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -80,5 +110,5 @@ export async function CreateRole(
   }
 
   const data = await res.json();
-  return data.message;
+  return data;
 }

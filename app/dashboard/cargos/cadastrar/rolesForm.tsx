@@ -31,12 +31,12 @@ export default function NewRolesForm() {
 
   async function onSubmit(values: FormValues) {
     try {
-      const message = await CreateRole(values);
+      const { success, message } = await CreateRole(values);
 
-      if (!message) {
-        toast.warning("Não foi possível cadastrar o cargo");
+      if (!success) {
+        toast.warning(message);
       } else {
-        toast.success(`${message}`);
+        toast.success(message);
       }
     } catch {
       toast.error("Erro ao cadastrar o cargo.");
@@ -75,16 +75,7 @@ export default function NewRolesForm() {
           />
         </div>
         <div className="flex gap-4">
-          <Button
-            type="submit"
-            disabled={form.formState.isSubmitting}
-            // onClick={() =>
-            //   toast("Não foi possível cadastrar o cargo", {
-            //     description:
-            //       "falta preencher algum campo ou preencheu errado",
-            //   })
-            // }
-          >
+          <Button type="submit" disabled={form.formState.isSubmitting}>
             Salvar
           </Button>
           <Button asChild variant="outline" type="reset">
