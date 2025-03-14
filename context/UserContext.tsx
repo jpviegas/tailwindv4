@@ -1,6 +1,8 @@
 "use client";
+
 import { UserType } from "@/api/route";
-import React, { createContext, useContext, useState } from "react";
+import Cookies from "js-cookie";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface UserContextType {
   user: UserType | null;
@@ -12,11 +14,17 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  useEffect(() => {
+    const userid = Cookies.get("userid");
+    if (userid) {
+      fetchUser(userid);
+    }
+  }, []);
   const [user, setUser] = useState<UserType | null>(null);
 
-  const fetchUser = async (email: string) => {
+  const fetchUser = async (userid: string) => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/user/${email}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/user/${userid}`,
       {
         method: "GET",
         headers: { "Content-Type": "application/json" },
@@ -25,7 +33,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     const data = await res.json();
 
     if (res.ok) {
-      setUser(data.user);
+      setUser(data.users);
     } else {
       console.error(data.message);
     }

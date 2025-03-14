@@ -50,9 +50,9 @@ export function LoginForm() {
       if (!success) {
         toast.error(message);
       } else {
-        fetchUser(`${values.email}`);
-        Cookies.set("token", token, { expires: 7, path: "/" });
-        Cookies.set("userid", user.id, { expires: 7, path: "/" });
+        fetchUser(user.id);
+        Cookies.set("token", token, { expires: 1, path: "/" });
+        Cookies.set("userid", user.id, { expires: 1, path: "/" });
         toast.success(message);
         router.push("/dashboard");
       }
