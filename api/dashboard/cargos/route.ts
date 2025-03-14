@@ -37,7 +37,7 @@ export async function GetCompanyRoles(
     limit: number;
     hasNextPage: boolean;
     hasPrevPage: boolean;
-    nextPage: number;
+    nextPage: null | number;
     prevPage: null | number;
   };
   roles: RoleTypeWithId[];
