@@ -73,19 +73,9 @@ export async function GetCompanyRoles(
 
 export async function GetCompanyRoleById(role: string): Promise<{
   success: boolean;
-  pagination: {
-    total: number;
-    page: number;
-    totalPages: number;
-    limit: number;
-    hasNextPage: boolean;
-    hasPrevPage: boolean;
-    nextPage: number;
-    prevPage: null | number;
-  };
-  roles: RoleTypeWithId[];
+  roles: RoleTypeWithId;
 }> {
-  let url = `${process.env.NEXT_PUBLIC_API_URL}/roles/${role}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/roles/${role}`;
 
   const res = await fetch(url, {
     method: "GET",

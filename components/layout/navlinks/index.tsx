@@ -23,7 +23,7 @@ export default function NavLinks() {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <Link href="/">Início</Link>
+            <span>Início</span>
           </BreadcrumbItem>
           {segments.map((segment, index) => (
             <Fragment key={index}>

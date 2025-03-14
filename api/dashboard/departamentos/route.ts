@@ -73,16 +73,6 @@ export async function GetCompanyDepartments(
 
 export async function GetCompanyDepartmentById(department: string): Promise<{
   success: boolean;
-  pagination: {
-    total: number;
-    page: number;
-    totalPages: number;
-    limit: number;
-    hasNextPage: boolean;
-    hasPrevPage: boolean;
-    nextPage: number;
-    prevPage: null | number;
-  };
   departments: DepartmentTypeWithId[];
 }> {
   let url = `${process.env.NEXT_PUBLIC_API_URL}/departments/${department}`;

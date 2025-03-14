@@ -1,7 +1,6 @@
 import DashboardHeader from "@/components/layout/dashboard/header";
 import { Metadata } from "next";
-// import Link from "next/link";
-// import { EmployeesList } from "./employeesList";
+import { EmployeesList } from "./employeesList";
 
 export const metadata: Metadata = {
   title: "Funcionários - Amplo Serviços",
@@ -13,7 +12,7 @@ export default async function EmployeesPage() {
     <main className="container mx-auto flex h-full flex-col justify-evenly gap-8">
       <DashboardHeader title="Funcionários" link="funcionarios/cadastrar" />
 
-      {/* <EmployeesList /> */}
+      <EmployeesList />
     </main>
   );
 }
