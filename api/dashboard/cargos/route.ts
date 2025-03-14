@@ -10,7 +10,7 @@ export async function GetAllRoles(): Promise<{
     limit: number;
     hasNextPage: boolean;
     hasPrevPage: boolean;
-    nextPage: number;
+    nextPage: null | number;
     prevPage: null | number;
   };
   roles: RoleTypeWithId[];
@@ -26,8 +26,8 @@ export async function GetAllRoles(): Promise<{
 
 export async function GetCompanyRoles(
   company: string,
-  role: string,
-  page: string,
+  role?: string,
+  page?: string,
 ): Promise<{
   success: boolean;
   pagination: {

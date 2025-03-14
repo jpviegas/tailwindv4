@@ -1,6 +1,7 @@
 "use client";
 
 import { GetCompanyDepartments } from "@/api/dashboard/departamentos/route";
+import { TablePagination } from "@/components/layout/dashboard/TablePagination";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,14 +12,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import {
   Table,
   TableBody,
@@ -39,7 +32,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 const FormSchema = z.object({
-  search: z.string().optional(),
+  department: z.string(),
 });
 
 export function DepartmentsList() {
@@ -51,7 +44,7 @@ export function DepartmentsList() {
     limit: number;
     hasNextPage: boolean;
     hasPrevPage: boolean;
-    nextPage: number;
+    nextPage: null | number;
     prevPage: null | number;
   }>({
     total: 0,
@@ -69,7 +62,7 @@ export function DepartmentsList() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      search: "",
+      department: "",
     },
   });
 
@@ -86,7 +79,7 @@ export function DepartmentsList() {
         departments,
       } = await GetCompanyDepartments(
         user._id,
-        values.search,
+        values.department,
         pagination.page.toString(),
       );
 
@@ -95,14 +88,14 @@ export function DepartmentsList() {
         setPagination(paginationData);
       }
     } catch (error) {
-      console.error("Erro ao buscar departamentos da empresa:", error);
-      toast.error("Não foi possível carregar os departamentos da empresa.");
+      console.error("Erro ao buscar cargos da empresa:", error);
+      toast.error("Não foi possível carregar os cargos da empresa.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const debouncedFetchDepartments = useCallback(
+  const debouncedFetchDepartment = useCallback(
     debounce((values: z.infer<typeof FormSchema>) => {
       fetchDepartments(values);
     }, 500),
@@ -111,18 +104,18 @@ export function DepartmentsList() {
 
   useEffect(() => {
     const subscription = form.watch((values) => {
-      debouncedFetchDepartments(values as z.infer<typeof FormSchema>);
+      debouncedFetchDepartment(values as z.infer<typeof FormSchema>);
     });
 
     return () => {
       subscription.unsubscribe();
-      debouncedFetchDepartments.cancel();
+      debouncedFetchDepartment.cancel();
     };
-  }, [form, debouncedFetchDepartments]);
+  }, [form, debouncedFetchDepartment]);
 
   useEffect(() => {
     fetchDepartments(form.getValues());
-  }, [form, debouncedFetchDepartments]);
+  }, [form]);
 
   const handlePageChange = async (newPage: number) => {
     try {
@@ -137,7 +130,7 @@ export function DepartmentsList() {
         departments,
       } = await GetCompanyDepartments(
         user._id,
-        form.getValues("search"),
+        form.getValues("department"),
         newPage.toString(),
       );
 
@@ -162,12 +155,12 @@ export function DepartmentsList() {
         >
           <FormField
             control={form.control}
-            name="search"
+            name="department"
             render={({ field }) => (
               <FormItem className="flex items-center gap-4">
                 <FormLabel>Buscar:</FormLabel>
                 <FormControl>
-                  <Input placeholder="buscar departamento" {...field} />
+                  <Input placeholder="buscar cargo" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -175,6 +168,7 @@ export function DepartmentsList() {
           />
         </form>
       </Form>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -203,16 +197,14 @@ export function DepartmentsList() {
                 </TableCell>
               </TableRow>
             ) : (
-              departments.map((department) => (
-                <TableRow key={department._id}>
-                  <TableCell className="w-1/2">
-                    {department.department}
-                  </TableCell>
+              departments.map((job) => (
+                <TableRow key={job._id}>
+                  <TableCell className="w-1/2">{job.department}</TableCell>
                   <TableCell className="flex w-full items-center justify-between">
                     10
                     <div className="flex justify-end gap-2">
                       <Button variant="ghost" size="icon" className="size-8">
-                        <Link href={`departments/${department._id}`}>
+                        <Link href={`roles/${job._id}`}>
                           <Pencil className="size-4" />
                         </Link>
                       </Button>
@@ -228,99 +220,11 @@ export function DepartmentsList() {
         </Table>
       </div>
 
-      <div className="flex items-center justify-between py-4">
-        <p className="text-muted-foreground text-sm">
-          {departments.length > 0 ? (
-            <>
-              Mostrando{" "}
-              {pagination.page === 1 ? 1 : (pagination.page - 1) * 10 + 1}
-              {" a "}
-              {pagination.page * 10 > pagination.total
-                ? pagination.total
-                : pagination.page * 10}
-              {" de "}
-              {pagination.total}
-              {" resultados"}
-            </>
-          ) : (
-            "Nenhum resultado encontrado"
-          )}
-        </p>
-
-        {pagination.totalPages > 1 && (
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => {
-                    if (pagination.hasPrevPage && pagination.prevPage) {
-                      handlePageChange(pagination.prevPage);
-                    }
-                  }}
-                  className={
-                    !pagination.hasPrevPage
-                      ? "pointer-events-none opacity-50"
-                      : "cursor-pointer"
-                  }
-                >
-                  Anterior
-                </PaginationPrevious>
-              </PaginationItem>
-
-              {Array.from({ length: pagination.totalPages }).map((_, index) => {
-                const pageNumber = index + 1;
-                const shouldShowPage =
-                  pageNumber === 1 ||
-                  pageNumber === pagination.totalPages ||
-                  Math.abs(pageNumber - pagination.page) <= 1;
-
-                if (!shouldShowPage) {
-                  if (
-                    pageNumber === 2 ||
-                    pageNumber === pagination.totalPages - 1
-                  ) {
-                    return (
-                      <PaginationItem key={pageNumber}>
-                        <span className="px-2">...</span>
-                      </PaginationItem>
-                    );
-                  }
-                  return null;
-                }
-
-                return (
-                  <PaginationItem key={pageNumber}>
-                    <PaginationLink
-                      onClick={() => handlePageChange(pageNumber)}
-                      isActive={pagination.page === pageNumber}
-                      className="cursor-pointer"
-                    >
-                      {pageNumber}
-                    </PaginationLink>
-                  </PaginationItem>
-                );
-              })}
-
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() => {
-                    if (pagination.hasNextPage && pagination.nextPage) {
-                      handlePageChange(pagination.nextPage);
-                    }
-                  }}
-                  className={
-                    !pagination.hasNextPage
-                      ? "pointer-events-none opacity-50"
-                      : "cursor-pointer"
-                  }
-                >
-                  Próximo
-                </PaginationNext>
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        )}
-      </div>
+      <TablePagination
+        pagination={pagination}
+        itemsCount={departments.length}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 }

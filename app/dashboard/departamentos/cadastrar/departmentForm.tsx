@@ -32,12 +32,12 @@ export default function NewDepartmentForm() {
 
   async function onSubmit(values: FormValues) {
     try {
-      const message = await CreateDepartment(values);
+      const { success, message } = await CreateDepartment(values);
 
-      if (!message) {
-        toast.warning("Não foi possível cadastrar o departamento");
+      if (!success) {
+        toast.warning(message);
       } else {
-        toast.success(`${message}`);
+        toast.success(message);
       }
     } catch {
       toast.error("Erro ao cadastrar o departamento.");
